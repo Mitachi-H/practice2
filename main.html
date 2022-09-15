@@ -22,7 +22,7 @@
 
     <div id="allEvent">
         <span>イベント一覧</span>
-        <ul is="eventList"></ul>
+        <ul id="eventList"></ul>
         <button id="createEvent" >新しいイベントを作成</button>
         <ul is="neweventList"></ul>
     </div>
@@ -32,7 +32,7 @@
             <span>新しいイベント</span>
             <ul>
                 <li id="eventName">
-                    <input id="newEnentName" type="text" placeholder="イベント名">
+                    <input id="newEventName" type="text" placeholder="イベント名">
                 </li>
                 <li id="payer">
                     <ul id="payerList"></ul>が
@@ -42,17 +42,19 @@
                     <ul id="receiverList" class="hidden"></ul>の分を支払い
                 </li>
                 <li id="">
-                    <input id="newEventCost"type="number">かかった
+                    <input id="newEventCost"type="number">円かかった
                 </li>
             </ul>
-            <button id="addNewEvent" class="neweventbutton">イベントを追加</button>
-            <button id="deleteNewEvent" class="neweventbutton">イベントを削除</button>
+            <button id="addNewEvent" class="neweventbutton">新しいイベントを追加</button>
+            <button id="deleteNewEvent" class="neweventbutton">新しいイベントを削除</button>
         </li>
     </template>
-    <template>
+    <template id="eventTmpl">
         <li id="event">
-            <span></span>
-            <span></span>
+            <span id=eventName></span><br>
+            <span id="detail"></span><br>
+        <button id="editEvent" class="hidden" >イベントを編集</button>
+        <button id="deleteEvent" class="hidden">イベントを削除</button>
         </li>
     </template>
 
