@@ -132,10 +132,12 @@ function addEvent(ul){
             }
             eventMap.set(newEventName,[payerList,receiverList,Number(ul.querySelector("#newEventCost").value)])
         }else{
+            console.log("a")
             alert("支払い金額が正しくありません")
             throw new Error()  
         }
     }else{
+        console.log("b")
         alert("支払い金額が正しくありません")
         throw new Error()
     }
