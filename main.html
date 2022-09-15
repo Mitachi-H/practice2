@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>割り勘</title>
+    <script src = "script.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <form id="newMember">
+        <input id="newMemberName" type="text" placeholder="新しいメンバー">
+        <input type="submit" id="addMember" value="追加">
+    </form>
+
+    <div id="allMember">
+        <button id="showMember">メンバーを非表示する</button>
+        <ul id="memberList"></ul>
+        <button id="deleteMember" class="hidden">選択したメンバーを削除する</button>
+    </div>
+
+    <div id="allEvent">
+        <span>イベント一覧</span>
+        <ul is="eventList"></ul>
+        <button id="createEvent" >新しいイベントを作成</button>
+        <ul is="neweventList"></ul>
+    </div>
+
+    <template id="newEventTmpl">
+        <li id="newEvent">
+            <span>新しいイベント</span>
+            <ul>
+                <li id="eventName">
+                    <input id="newEnentName" type="text" placeholder="イベント名">
+                </li>
+                <li id="payer">
+                    <ul id="payerList"></ul>が
+                </li>
+                <li id="receiver">
+                    <span></span>
+                    <ul id="receiverList" class="hidden"></ul>の分を支払い
+                </li>
+                <li id="">
+                    <input id="newEventCost"type="number">かかった
+                </li>
+            </ul>
+            <button id="addNewEvent" class="neweventbutton">イベントを追加</button>
+            <button id="deleteNewEvent" class="neweventbutton">イベントを削除</button>
+        </li>
+    </template>
+    <template>
+        <li id="event">
+            <span></span>
+            <span></span>
+        </li>
+    </template>
+
+</body>
+</html>
