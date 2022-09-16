@@ -14,6 +14,11 @@
         <input type="submit" id="addMember" value="追加">
     </form>
 
+    <div id="calculator">
+        <button id="startCaluculate">計算する</button>
+        <ul id="resultList"></ul>
+    </div>
+
     <div id="allMember">
         <button id="showMember">メンバーを非表示する</button>
         <ul id="memberList"></ul>
@@ -57,6 +62,13 @@
         <button id="deleteEvent" class="hidden">イベントを削除</button>
         </li>
     </template>
-
+    <template id="resultTmpl">
+        <li>
+            <span id="payerName"></span>
+            <span id="toWhom">
+                =><span id="receiverName"></span><sapn id="howMuch"></sapn>円
+            </span><br>
+        </li>
+    </template>
 </body>
 </html>

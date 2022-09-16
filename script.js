@@ -4,8 +4,11 @@ const eventMap = new Map()
 const newMemberForm = document.querySelector("#newMember")
 const allMember = document.querySelector("#allMember")
 const allEvent = document.querySelector("#allEvent")
+const calculator = document.querySelector("#calculator")
+
 const newEvent = document.querySelector("#newEventTmpl").content.firstElementChild
 const eventTmpl = document.querySelector("#eventTmpl").content.firstElementChild
+const resultTmpl = document.querySelector("#resultTmpl").content.firstElementChild
 
 newMemberForm.addEventListener("submit",event=>{
     event.preventDefault()
@@ -34,6 +37,14 @@ allEvent.children[2].addEventListener("click",()=>{
         createEvent()
     }
 })
+calculator.children[0].addEventListener("click",()=>{
+    if(eventMap.size==0){
+        alert("イベントが不十分です")
+        throw new Error()
+    }
+    Caluculate()
+})
+
 function addMember(){
     const member = newMemberForm.children[0].value
     if(member){
@@ -195,11 +206,8 @@ function addEditEvent(edit,eventname){
             clone.addEventListener("click",editEventclick)
             event.before(clone)
             event.remove()
-        }else{
-            console.log("みつけられん")
-        }
     }
-}
+}}
 function editEventclick(event){
     if(event.target.classList[0]=="neweventbutton"){
         if(event.target.id=="addNewEvent"){
@@ -210,13 +218,83 @@ function editEventclick(event){
                 addEvent(event.target.parentElement.children[1])
             }
             catch{
-                eventMap.set(oldname,spare)
+                eventMap.set(oldname,spare)//順番が一番最後になっちゃう
             }
-            setEvent()
         }
-        setEvent()
+            setEvent()
     }else if(event.target.id=="allCheck"){
         event.target.parentElement.nextElementSibling.classList.toggle("hidden")
     }
 }
-//setEventの前に編集中のイベントないか確認
+function Caluculate(){
+    memberMap.forEach((val,name)=>{memberMap.set(name,0)})//初期化
+    eventMap.forEach(detail=>{
+        memberMap.forEach((val,name)=>{
+            if(detail[0].includes(name)){
+                memberMap.set(name,val-detail[2]/detail[0].length)
+            }
+            if(detail[1].includes(name)){             
+                memberMap.set(name,memberMap.get(name)+detail[2]/detail[1].length)
+            }
+        })
+    })//memberMapに収支記録
+    let payOrder = [["tmpl",Infinity]]
+    memberMap.forEach((val,name)=>{
+        let i=0
+        while(true){
+            if(payOrder[i][1]>val){
+                if(i+1==payOrder.length){
+                    payOrder.push([name,val])
+                    break
+                }else{
+                    i++
+                }
+            }else{
+                payOrder.splice(i,0,[name,val])
+                break
+            }
+        }
+    })
+    payOrder.shift()//支払い金額の高い順に並び替え
+    calculator.children[1].innerHTML=""//result初期化
+    for(const [index,[name,val]] of payOrder.entries()){
+        if(val>0){
+            let i = payOrder.length-1
+            while(index<i){
+                const stock = payOrder[i][1]
+                if(stock!=0){//100円単位にするときは、ここの数値を変えるのかな       
+                    payOrder[i][1]+=val
+                    if(payOrder[i][1]>0){
+                        addResult(name,payOrder[i][0],-stock)
+                        payOrder[index][1]=payOrder[i][1]
+                        payOrder[i][1]=0
+                        i--
+                    }else{
+                        addResult(name,payOrder[i][0],val)
+                        payOrder[index][1]=0
+                        break
+                    }
+                }
+            }
+        }
+    }
+}
+function addResult(payer,reciever,cost){
+    const resultList = calculator.querySelector("#resultList")
+    try{
+        if(resultList.lastElementChild.querySelector("#payerName").textContent==payer){
+            const clone = resultTmpl.children[1].cloneNode(true)
+            clone.children[0].textContent=reciever
+            clone.children[1].textContent=Math.floor(cost)
+            resultList.lastElementChild.append(clone)
+        }else{
+            throw new Error()
+        }
+    }catch{
+        const clone = resultTmpl.cloneNode(true)
+        clone.querySelector("#payerName").textContent=payer
+        clone.querySelector("#receiverName").textContent=reciever
+        clone.querySelector("#howMuch").textContent=Math.floor(cost)
+        resultList.append(clone)
+    }
+}
