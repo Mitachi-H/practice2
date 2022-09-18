@@ -58,12 +58,14 @@ function addMember(){
 function setMember(){
     allMember.children[1].textContent=""
     memberMap.forEach((value,name)=>{
-        allMember.children[1].innerHTML+="<li>"+name+"<input id='checkMember' type='checkbox'></li>"
+        allMember.children[1].innerHTML+="<li class='hidden active'>"+name+"<input id='checkMember' type='checkbox'></li>"
     })
 }
 function showMember(){
     const memberList = allMember.children[0]
-    allMember.children[1].classList.toggle("hidden")
+    for(const v of allMember.children[1].children){
+        v.classList.toggle("active")
+    }
     if(memberList.textContent=="メンバーを表示する"){
         memberList.textContent="メンバーを非表示する"
     }else{
@@ -71,11 +73,11 @@ function showMember(){
     }
 }
 function showDeleteButton(){
-    allMember.children[2].classList.add("hidden")
+    allMember.children[2].classList.remove("active")
     if(allMember.children[0].textContent=="メンバーを非表示する"){
         for(const v of allMember.children[1].querySelectorAll("input")){
             if(v.checked){
-                allMember.children[2].classList.remove("hidden")
+                allMember.children[2].classList.add("active")
                 break
             }
         }
@@ -101,7 +103,7 @@ function newEventclick(event){
         }
         event.currentTarget.remove()//登録されてるのがliだからそれが消える。
     }else if(event.target.id=="allCheck"){
-        event.target.parentElement.nextElementSibling.classList.toggle("hidden")
+        event.target.parentElement.nextElementSibling.classList.toggle("active")
     }
 }
 function addEvent(ul){
@@ -171,8 +173,9 @@ function eventClick(event){
         setEvent()
     }else{
         if(event.currentTarget.id=="event"){
-            event.currentTarget.querySelector("#editEvent").classList.toggle("hidden")
-            event.currentTarget.querySelector("#deleteEvent").classList.toggle("hidden")
+            event.currentTarget.querySelector("#editEvent").classList.toggle("active")
+            event.currentTarget.querySelector("#deleteEvent").classList.toggle("active")
+            event.currentTarget.classList.toggle("gray")
         }
     }
 }
@@ -184,7 +187,7 @@ function addEditEvent(edit,eventname){
             const clone = newEvent.cloneNode(true)
             const payerList = clone.querySelector("#payerList")
             const recieverList = clone.querySelector("#receiverList")
-            recieverList.classList.remove("hidden")
+            recieverList.classList.add("active")
             clone.children[1].children[2].children[0].innerHTML="全員<input id='allCheck' type='checkbox'>"
             memberMap.forEach((value,name)=>{
                 if(eventdetail[0].includes(name)){
@@ -223,7 +226,7 @@ function editEventclick(event){
         }
             setEvent()
     }else if(event.target.id=="allCheck"){
-        event.target.parentElement.nextElementSibling.classList.toggle("hidden")
+        event.target.parentElement.nextElementSibling.classList.toggle("active")
     }
 }
 function Caluculate(){
