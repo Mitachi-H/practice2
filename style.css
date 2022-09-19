@@ -38,7 +38,7 @@ li{
 form{
     text-align: center;
 }
-input[type=text] {
+input[type="text"] {
   font-size: 16px;
   transform: scale(0.8);
 }
