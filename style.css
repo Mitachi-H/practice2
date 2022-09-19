@@ -83,3 +83,23 @@ div#header{
 .green{
     background-color: #e2f5e1;
 }
+@media screen and (min-width:960px) {
+    button{
+        height: 5vh;
+        width:10vw;
+    }
+    .submitButton{
+        height: 5vh;
+        width:10vw;
+    }
+    #deleteMember{
+        width:20vw;
+    }
+    div{
+        margin-right: 15%;
+        margin-left: 15%;
+    }
+    div#header{
+        font-size: 2vw;
+    }
+}
