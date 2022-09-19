@@ -1,5 +1,65 @@
-.gray{
-    background-color: rgb(201, 201, 201);
+body{
+    background-color: #e3f6f5;
+    font-family: "Sawarabi Gothic"; 
+}
+button{
+    background-color: #f5e1e2;
+    border:none;
+    border-radius: 10px;
+    height: 5vh;
+    width:20vw;
+}
+#deleteMember{
+    width:60vw;
+}
+.submitButton{
+    background-color: #f5e1e2;
+    border: none;
+    border-radius: 10px;
+    height: 5vh;
+    width:20vw;
+}
+div{
+    background-color: #fffffe;
+    margin-right: 5%;
+    margin-left: 5%;
+    text-align: center;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+ul{
+    margin:0;
+    padding-left: 0;
+}
+li{
+    list-style: none;
+    background-color: antiquewhite;
+}
+form{
+    text-align: center;
+}
+div#header{
+    height: auto;
+    font-size: 5vw;
+}
+#event #showMember{
+    cursor: pointer;
+}
+.triangleBefore::before{
+    content: '▼';
+    display: inline-block;
+    transform: rotate(-90deg);
+    transition: .4s;
+}
+.triangleBefore.active::before {
+    transform: rotate(0deg);
+}
+#createEvent{
+    margin-top: 10%;
+}
+.floatLeft{
+    float: left;
+    padding-left: 2vw;
 }
 .hidden.active {
     height: 2rem;
@@ -12,6 +72,6 @@
     visibility: hidden;
     transition: .4s;
 }
-#event{
-    cursor: pointer;
+.green{
+    background-color: #e2f5e1;
 }

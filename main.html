@@ -8,63 +8,67 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src = "script.js" defer></script>
     <link rel="stylesheet" type="text/css" href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=Sawarabi+Gothic" rel="stylesheet">
 </head>
 <body>
-    <nav>
+    <div id="header">
         <h1>割り勘</h1>
-    </nav>
+        <p>ー割り勘の計算、共有ー</p>
+        <button id="lord">ロード</button>
+    </div>
 
     <div id="calculator">
-        <button id="startCaluculate">計算する</button>
+        <button id="startCaluculate">計算</button>
         <ul id="resultList"></ul>
     </div>
 
-    <form id="newMember">
-        <input id="newMemberName" type="text" placeholder="新しいメンバー">
-        <input type="submit" id="addMember" value="追加">
-    </form>
-
     <div id="allMember">
-        <button id="showMember">メンバーを非表示する</button>
+        <form id="newMember">
+            <input id="newMemberName" type="text" placeholder="新しいメンバー">
+            <input type="submit" id="addMember" value="追加" class="submitButton">
+        </form>
+        <sapn id="showMember" class="triangleBefore active">メンバー</sapn>
         <ul id="memberList"></ul>
         <button id="deleteMember" class="hidden">選択したメンバーを削除する</button>
     </div>
 
     <div id="allEvent">
-        <span>イベント一覧</span>
+        <span>イベント</span>
         <ul id="eventList"></ul>
-        <button id="createEvent" >新しいイベントを作成</button>
         <ul is="neweventList"></ul>
+        <button id="createEvent" >新規作成</button>
     </div>
 
     <template id="newEventTmpl">
         <li id="newEvent">
-            <span>新しいイベント</span>
+            <span class="floatLeft">新しいイベント</span>
             <ul>
                 <li id="eventName">
                     <input id="newEventName" type="text" placeholder="イベント名">
                 </li>
                 <li id="payer">
-                    <ul id="payerList"></ul>が
+                    <ul id="payerList"></ul>
                 </li>
+                <li>が<br></li>
                 <li id="receiver">
-                    <span></span>
-                    <ul id="receiverList" class="hidden"></ul>の分を支払い
+                    <span>全員<input id='allCheck' type='checkbox' checked='true'></span>
+                    <ul id="receiverList"></ul>
                 </li>
+                <li>の分を払い</li>
                 <li id="">
                     <input id="newEventCost"type="number">円かかった
                 </li>
             </ul>
-            <button id="addNewEvent" class="neweventbutton">新しいイベントを追加</button>
-            <button id="deleteNewEvent" class="neweventbutton">新しいイベントを削除</button>
+            <button id="addNewEvent" class="neweventbutton">追加</button>
+            <button id="deleteNewEvent" class="neweventbutton">削除</button>
         </li>
     </template>
     <template id="eventTmpl">
         <li id="event">
             <span id=eventName></span><br>
             <span id="detail"></span><br>
-        <button id="editEvent" class="hidden">イベントを編集</button>
-        <button id="deleteEvent" class="hidden">イベントを削除</button>
+        <button id="editEvent" class="hidden">編集</button>
+        <button id="deleteEvent" class="hidden">削除</button>
         </li>
     </template>
     <template id="resultTmpl">

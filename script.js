@@ -1,10 +1,11 @@
-const memberMap = new Map()
-const eventMap = new Map()
+let memberMap = new Map()
+let eventMap = new Map()
 
 const newMemberForm = document.querySelector("#newMember")
 const allMember = document.querySelector("#allMember")
 const allEvent = document.querySelector("#allEvent")
 const calculator = document.querySelector("#calculator")
+const lord = document.querySelector("#lord")
 
 const newEvent = document.querySelector("#newEventTmpl").content.firstElementChild
 const eventTmpl = document.querySelector("#eventTmpl").content.firstElementChild
@@ -19,7 +20,7 @@ newMemberForm.addEventListener("submit",event=>{
 allMember.addEventListener("click",event=>{
     if(event.target.id=="deleteMember"){
         if(confirm("選択したメンバーを削除しますか？")){
-            for(const v of allMember.children[1].querySelectorAll("input")){
+            for(const v of allMember.children[2].querySelectorAll("input")){
                 if(v.checked){
                     memberMap.delete(v.parentElement.textContent)
                     v.parentElement.remove()
@@ -28,11 +29,12 @@ allMember.addEventListener("click",event=>{
         }
     }
     if(event.target.id=="showMember"){
+        event.target.classList.toggle("active")
         showMember()
     }
     showDeleteButton()
 })
-allEvent.children[2].addEventListener("click",()=>{
+allEvent.children[3].addEventListener("click",()=>{
     if(memberMap.size){
         createEvent()
     }
@@ -43,6 +45,12 @@ calculator.children[0].addEventListener("click",()=>{
         throw new Error()
     }
     Caluculate()
+    if(calculator.querySelector("#resultList").textContent==""){
+        calculator.querySelector("#resultList").textContent="お金の受け渡しはありません"
+    }
+})
+lord.addEventListener("click",()=>{
+    lordData()
 })
 
 function addMember(){
@@ -52,32 +60,28 @@ function addMember(){
             alert("同じ名前のメンバーがすでにいます！")
         }else{
             memberMap.set(member,0)
+            addJSON("member",memberMap)
         }
     }
 }
 function setMember(){
-    allMember.children[1].textContent=""
+    allMember.children[2].textContent=""
     memberMap.forEach((value,name)=>{
-        allMember.children[1].innerHTML+="<li class='hidden active'>"+name+"<input id='checkMember' type='checkbox'></li>"
+        allMember.children[2].innerHTML+="<li class='hidden active'>"+name+"<input id='checkMember' type='checkbox'></li>"
     })
 }
 function showMember(){
-    const memberList = allMember.children[0]
-    for(const v of allMember.children[1].children){
+    const memberList = allMember.children[4]
+    for(const v of allMember.children[2].children){
         v.classList.toggle("active")
-    }
-    if(memberList.textContent=="メンバーを表示する"){
-        memberList.textContent="メンバーを非表示する"
-    }else{
-        memberList.textContent="メンバーを表示する"
     }
 }
 function showDeleteButton(){
-    allMember.children[2].classList.remove("active")
-    if(allMember.children[0].textContent=="メンバーを非表示する"){
-        for(const v of allMember.children[1].querySelectorAll("input")){
+    allMember.children[3].classList.remove("active")
+    if(allMember.children[2].firstElementChild.classList.contains("hidden")){
+        for(const v of allMember.children[2].querySelectorAll("input")){
             if(v.checked){
-                allMember.children[2].classList.add("active")
+                allMember.children[3].classList.add("active")
                 break
             }
         }
@@ -87,13 +91,12 @@ function createEvent(){
     const clone = newEvent.cloneNode(true)
     const payerList = clone.querySelector("#payerList")
     const recieverList = clone.querySelector("#receiverList")
-    clone.children[1].children[2].children[0].innerHTML="全員<input id='allCheck' type='checkbox' checked='true'>"
     memberMap.forEach((value,name)=>{
         payerList.innerHTML+="<li>"+name+"<input type='checkbox'></li>"
-        recieverList.innerHTML+="<li>"+name+"<input type='checkbox'></li>"
+        recieverList.innerHTML+="<li class='hidden'>"+name+"<input type='checkbox'></li>"
     })
     clone.addEventListener("click",newEventclick)
-    allEvent.children[3].append(clone)
+    allEvent.children[2].append(clone)
 }
 function newEventclick(event){
     if(event.target.classList[0]=="neweventbutton"){
@@ -103,7 +106,9 @@ function newEventclick(event){
         }
         event.currentTarget.remove()//登録されてるのがliだからそれが消える。
     }else if(event.target.id=="allCheck"){
-        event.target.parentElement.nextElementSibling.classList.toggle("active")
+        for(const v of event.target.parentElement.nextElementSibling.children){
+            v.classList.toggle("active")
+        }
     }
 }
 function addEvent(ul){
@@ -144,6 +149,7 @@ function addEvent(ul){
                 newEventName="イベント"+Number(maxValue+1)
             }
             eventMap.set(newEventName,[payerList,receiverList,Number(ul.querySelector("#newEventCost").value)])
+            addJSON("event",eventMap)
         }else{
             alert("支払い金額が0以下の数字です")
             throw new Error()  
@@ -159,7 +165,7 @@ function setEvent(){
     eventMap.forEach((detail,eventname)=>{
         const clone = eventTmpl.cloneNode(true)
         clone.querySelector("#eventName").textContent=eventname
-        clone.querySelector("#detail").textContent=detail[0]+"が"+detail[1]+"の分を支払い、"+detail[2]+"円かかった。"
+        clone.querySelector("#detail").textContent=detail[0].join(" , ")+" が "+detail[1].join(" , ")+" の分を支払い、"+detail[2]+"円かかった。"
         clone.addEventListener("click",eventClick)
         ul.append(clone)
     })
@@ -175,7 +181,7 @@ function eventClick(event){
         if(event.currentTarget.id=="event"){
             event.currentTarget.querySelector("#editEvent").classList.toggle("active")
             event.currentTarget.querySelector("#deleteEvent").classList.toggle("active")
-            event.currentTarget.classList.toggle("gray")
+            event.currentTarget.classList.toggle("green")
         }
     }
 }
@@ -188,24 +194,24 @@ function addEditEvent(edit,eventname){
             const payerList = clone.querySelector("#payerList")
             const recieverList = clone.querySelector("#receiverList")
             recieverList.classList.add("active")
-            clone.children[1].children[2].children[0].innerHTML="全員<input id='allCheck' type='checkbox'>"
             memberMap.forEach((value,name)=>{
                 if(eventdetail[0].includes(name)){
                     payerList.innerHTML+="<li>"+name+"<input type='checkbox' checked='true'></li>"
                 }else{
-                    payerList.innerHTML+="<li>"+name+"<input type='checkbox'></li>"
+                    payerList.innerHTML+="<li >"+name+"<input type='checkbox'></li>"
                 }
                 if(eventdetail[1].includes(name)){
-                    recieverList.innerHTML+="<li>"+name+"<input type='checkbox' checked='true'></li>"
+                    recieverList.innerHTML+="<li class='hidden active'>"+name+"<input type='checkbox' checked='true'></li>"
                 }else{
-                    recieverList.innerHTML+="<li>"+name+"<input type='checkbox'></li>"
+                    recieverList.innerHTML+="<li class='hidden active'>"+name+"<input type='checkbox'></li>"
                 }
             })
             clone.querySelector("#newEventName").value=eventname
             clone.querySelector("#newEventName").dataset.oldname=eventname
             clone.querySelector("#newEventCost").value=eventdetail[2]
             clone.querySelector("#addNewEvent").textContent="編集完了"
-            clone.querySelector("#deleteNewEvent").textContent="編集をやめる"
+            clone.querySelector("#deleteNewEvent").textContent="編集中断"
+            clone.querySelector("#allCheck").checked=false
             clone.addEventListener("click",editEventclick)
             event.before(clone)
             event.remove()
@@ -221,12 +227,15 @@ function editEventclick(event){
                 addEvent(event.target.parentElement.children[1])
             }
             catch{
-                eventMap.set(oldname,spare)//順番が一番最後になっちゃう
+                eventMap.set(oldname,spare)
+                addJSON("event",eventMap)
             }
         }
             setEvent()
-    }else if(event.target.id=="allCheck"){
-        event.target.parentElement.nextElementSibling.classList.toggle("active")
+    }else if(event.target.id=="allCheck"){        
+        for(const v of event.target.parentElement.nextElementSibling.children){
+            v.classList.toggle("active")
+        }
     }
 }
 function Caluculate(){
@@ -299,5 +308,18 @@ function addResult(payer,reciever,cost){
         clone.querySelector("#receiverName").textContent=reciever
         clone.querySelector("#howMuch").textContent=Math.floor(cost)
         resultList.append(clone)
+    }
+}
+function addJSON(type,map){
+    localStorage.setItem(type,JSON.stringify([...map]))
+}
+function lordData(){
+    const memberJSON = localStorage.getItem("member")
+    const eventJSON = localStorage.getItem("event")
+    if(memberJSON&&eventJSON){
+        memberMap = new Map(JSON.parse(memberJSON))
+        eventMap = new Map(JSON.parse(eventJSON))
+        setEvent()
+        setMember()
     }
 }
